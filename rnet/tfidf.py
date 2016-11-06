@@ -1,4 +1,3 @@
-
 import csv
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -27,10 +26,11 @@ for line in our_csv:
 
 sklearn_tfidf = TfidfVectorizer(norm='l2',min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words = invalid_words)
 sklearn_representation = sklearn_tfidf.fit_transform(all_documents)
-
-
-########### END BLOG POST 1 #############
-
+storage = dict()
+storage[0] = sklearn_tfidf
+storage[1] = sklearn_representation
+pickle.dump(storage, open("demo_matrix.p", "wb"))
+print("DONE STORING.")
 def cosine_similarity(vector1, vector2):
     # dot_product = sum(p*q for p,q in zip(vector1, vector2))
     dot_product = np.dot(vector1,vector2.T)
@@ -59,16 +59,3 @@ for v1 in range(sklearn_representation.shape[0]):
     print("v1 is ", v1)
 
 pickle.dump(best_vals, open("true_match.p", "wb"))
-
-    # top_indices = []
-    # for key2,val2 in our_model_dict.items():
-    #     if int(key1) != int(key2):
-    #         our_queue.put((-1*np.dot(val1,val2), key2))
-
-# skl_tfidf_comparisons = []
-# for count_0, doc_0 in enumerate(sklearn_representation.toarray()):
-#     for count_1, doc_1 in enumerate(sklearn_representation.toarray()):
-#         skl_tfidf_comparisons.append((cosine_similarity(doc_0, doc_1), count_0, count_1))
-
-# for x in zip(sorted(our_tfidf_comparisons, reverse = True), sorted(skl_tfidf_comparisons, reverse = True)):
-# print x

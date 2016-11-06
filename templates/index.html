@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example of Bootstrap 3 Simple Tables</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<style type="text/css">
+    .bs-example{
+    	margin: 20px;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">RNET</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="/">Start</a></li>
+              <!--li><a href="/about/">About</a></li-->
+            </ul>
+            <!--ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
+              <li><a href="../navbar-static-top/">Static top</a></li>
+              <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+            </ul-->
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h2>Your impression:</h2>
+	<form id="search" name="search" action="/api/search/" method="post">{% csrf_token %}
+        <p>
+	    <textarea name="s" class="form-control"></textarea></p>
+        <p>
+          <input type="submit" class="btn btn-lg btn-primary" role="button" value="Find similar patients &raquo;" />
+        </p></form>
+      </div>
+
+  <div class="bs-example">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Result</th>
+                <th>Impression</th>
+            </tr>
+        </thead>
+        <tbody id="results">
+            <tr>
+                <td><img src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></td>
+                <td> 1.  Extensive left-sided pleural thickening with linear scarring  throughout the left lung, which may represent fibrosis from prior  infection or sequelae of tuberculosis treatment.<br/>
+ <br/>
+ 2.  No evidence of active tuberculosis infection.<br/>
+<br/> 
+ Electronically signed by David Avrin on 10/31/2016 5:09 PM<br/>
+<br/> 
+ My electronic signature on this consultation report indicates my direct  involvement in the interpretation of the examination and/or the direct  supervision of the entire procedure and agreement with the report.
+</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+
+    </div> <!-- /container -->
+
+    <script>
+// Attach a submit handler to the form
+$( "#search" ).submit(function( event ) {
+ 
+  // Stop form from submitting normally
+  event.preventDefault();
+ 
+  // Get some values from elements on the page:
+  var $form = $( this ),
+    term = $form.find( "textarea[name='s']" ).val(),
+    url = $form.attr( "action" );
+ 
+  // Send the data using post
+  var posting = $.post( url, { 's': term } );
+ 
+  // Put the results in a div
+posting.done(function( data ) {
+    $("#results").html('');
+    for (i = 0; i < data.length; i++) {
+        r = data[i];
+		    var row = $('<tr><td><img src="'+r[0]+'" /></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>');
+        $("#results").append(row);
+    }
+  });
+});
+</script>
+</body>
+</html>

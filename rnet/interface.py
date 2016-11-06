@@ -17,7 +17,7 @@ def cosine_similarity(vector1, vector2):
 test_str = "Chest cavity lung tube"
 
 
-def get_list(test_str):
+def get_list(test_str, procedure):
     storage = pickle.load(open("rnet/demo_matrix.p", "rb"))
 
     rows = []
@@ -37,7 +37,13 @@ def get_list(test_str):
         our_queue.put((val, rows[i+1]))
 
     best_list = []
-    for _ in range(5):
-        best_list.append(our_queue.get()[1])
+    for _ in range(len(rows)):
+        row = our_queue.get()
+        row[1].append(-row[0][(0,0)])
+        if procedure in row[1][3]:
+            best_list.append(row[1])
+            if len(best_list) == 5:
+                break
 
+    
     return best_list

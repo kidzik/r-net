@@ -29,7 +29,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">R-NET</a>
+            <a class="navbar-brand" href="/">R-NET</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -50,7 +50,7 @@
         <h2>Your impression:</h2>
 	<form id="search" name="search" action="/api/search/" method="post">{% csrf_token %}
         <p>
-	    <textarea name="s" class="form-control" style="height: 100px"></textarea></p>
+	  <textarea name="s" class="form-control" style="height: 100px"></textarea>
         <p>
           <input type="submit" class="btn btn-lg btn-primary" role="button" value="Find similar patients &raquo;" />
         </p></form>
@@ -63,6 +63,7 @@
                 <th>Photo</th>
                 <th>Result</th>
                 <th>Impression</th>
+                <th>Relevance</th>
             </tr>
         </thead>
 	<tbody id="results">
@@ -81,7 +82,7 @@
         <h4 class="modal-title" id="myModalLabel">Details</h4>
       </div>
       <div class="modal-body" style="text-align: center">
-        <div style="text-align: center;"><img src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></div>
+        <div style="text-align: center;"><img id="modalImg" src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></div>
 	<br />
 	  <table class="table table-responsive">
 	    <tbody>
@@ -160,7 +161,7 @@ posting.done(function( data ) {
     $("#results").html('');
     for (i = 0; i < data.length; i++) {
        r = data[i];
-       var row = $('<tr class="clickRow" id="row' + i + '"><td><img src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></td><td>'+r[11].substr(0,500)+'...</td><td>'+r[12].substr(0,500)+'...</td></tr>');
+       var row = $('<tr class="clickRow" id="row' + i + '"><td><img src="' + r[14] +'" /></td><td>'+r[11].substr(0,500)+'...</td><td>'+r[12].substr(0,500)+'...</td><td>' + r[13].toPrecision(2) + ' </td></tr>');
        $("#results").append(row);
     }
 
@@ -179,6 +180,7 @@ var r = rows[ii];
        $("#modalDate").html(r[9]);
        $("#modalResult").html(r[11]);
        $("#modalImpression").html(r[12]);
+       $("#modalImg").attr('src',r[14]);
 
 		    $('#myModal').modal('show');
 		    

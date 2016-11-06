@@ -86,6 +86,45 @@
 
     </div> <!-- /container -->
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Details</h4>
+      </div>
+      <div class="modal-body" style="text-align: center">
+        <div style="text-align: center;"><img src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></div>
+	<br />
+	  <table class="table table-responsive">
+	    <tbody>
+	      <tr class="row">
+		<th scope="row" style="width: 30%;">Doctor</th>
+		<td id="modalDoctor" style="width: 70%;"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Date</th>
+		<td id="modalDate"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Result</th>
+		<td id="modalResult"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Impression</th>
+		<td id="modalImpression"></td>
+	      </tr>
+	    </tbody>
+	  </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    
     <script>
 // Attach a submit handler to the form
 $( "#search" ).submit(function( event ) {
@@ -105,9 +144,13 @@ $( "#search" ).submit(function( event ) {
 posting.done(function( data ) {
     $("#results").html('');
     for (i = 0; i < data.length; i++) {
-        r = data[i];
-		    var row = $('<tr><td><img src="'+r[0]+'" /></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>');
-        $("#results").append(row);
+       r = data[i];
+       var row = $('<tr data-toggle="modal" data-target="#myModal"><td><img src="'+r[0]+'" /></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>');
+       $("#results").append(row);
+       $("#modalDoctor").html('doc')
+       $("#modalDate").html('doc')
+       $("#modalResult").html('doc')
+       $("#modalImpression").html('doc')
     }
   });
 });

@@ -10,11 +10,4 @@ def main(request):
 @csrf_exempt
 def search(request):
     ll = get_list(request.POST['s'])
-    print(ll)
-    # request.POST['s']
-    res = [
-        ['http://www.jjc.edu/admissions/PublishingImages/radiology.jpg','result1','impression'],
-        ['http://www.jjc.edu/admissions/PublishingImages/radiology.jpg','result2','impression'],
-        ['http://www.jjc.edu/admissions/PublishingImages/radiology.jpg','result3','impression'],
-    ]
-    return JsonResponse(res,safe=False)
+    return JsonResponse(ll,safe=False)

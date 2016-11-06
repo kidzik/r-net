@@ -9,11 +9,11 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <style type="text/css">
     .bs-example{
     	margin: 20px;
     }
+    .modal .modal-dialog { width: 80%; }
 </style>
 </head>
 <body>
@@ -50,14 +50,14 @@
         <h2>Your impression:</h2>
 	<form id="search" name="search" action="/api/search/" method="post">{% csrf_token %}
         <p>
-	    <textarea name="s" class="form-control"></textarea></p>
+	    <textarea name="s" class="form-control" style="height: 100px"></textarea></p>
         <p>
           <input type="submit" class="btn btn-lg btn-primary" role="button" value="Find similar patients &raquo;" />
         </p></form>
       </div>
 
   <div class="bs-example">
-    <table class="table">
+    <table class="table" style="display: None">
         <thead>
             <tr>
                 <th>Photo</th>
@@ -65,22 +65,8 @@
                 <th>Impression</th>
             </tr>
         </thead>
-        <tbody id="results">
-            <tr>
-                <td><img src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></td>
-                <td> 1.  Extensive left-sided pleural thickening with linear scarring  throughout the left lung, which may represent fibrosis from prior  infection or sequelae of tuberculosis treatment.<br/>
- <br/>
- 2.  No evidence of active tuberculosis infection.<br/>
-<br/> 
- Electronically signed by David Avrin on 10/31/2016 5:09 PM<br/>
-<br/> 
- My electronic signature on this consultation report indicates my direct  involvement in the interpretation of the examination and/or the direct  supervision of the entire procedure and agreement with the report.
-</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
+	<tbody id="results">
+	</tbody>
     </table>
   </div>
 
@@ -100,20 +86,44 @@
 	  <table class="table table-responsive">
 	    <tbody>
 	      <tr class="row">
-		<th scope="row" style="width: 30%;">Doctor</th>
-		<td id="modalDoctor" style="width: 70%;"></td>
+		<th scope="row" style="width: 20%;">Doctor</th>
+		<td id="modalDoctor" style="width: 70%; text-align: left"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Read by</th>
+		<td id="modalReadBy" style="text-align: left;"></td>
 	      </tr>
 	      <tr class="row">
 		<th scope="row">Date</th>
-		<td id="modalDate"></td>
+		<td id="modalDate" style="text-align: left;"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Department</th>
+		<td id="modalDepartment" style="text-align: left;"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Code</th>
+		<td id="modalCode" style="text-align: left;"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Class</th>
+		<td id="modalClass" style="text-align: left;"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Procedure</th>
+		<td id="modalProcedure" style="text-align: left;"></td>
+	      </tr>
+	      <tr class="row">
+		<th scope="row">Priority</th>
+		<td id="modalPriority" style="text-align: left;"></td>
 	      </tr>
 	      <tr class="row">
 		<th scope="row">Result</th>
-		<td id="modalResult"></td>
+		<td id="modalResult" style="text-align: left;"></td>
 	      </tr>
 	      <tr class="row">
 		<th scope="row">Impression</th>
-		<td id="modalImpression"></td>
+		<td id="modalImpression" style="text-align: left;"></td>
 	      </tr>
 	    </tbody>
 	  </table>
@@ -125,7 +135,9 @@
   </div>
 </div>
     
-    <script>
+<script>
+var rows;
+
 // Attach a submit handler to the form
 $( "#search" ).submit(function( event ) {
  
@@ -140,19 +152,40 @@ $( "#search" ).submit(function( event ) {
   // Send the data using post
   var posting = $.post( url, { 's': term } );
  
-  // Put the results in a div
+// Put the results in a div
+
 posting.done(function( data ) {
+    rows = data;
+    $(".table").show();
     $("#results").html('');
     for (i = 0; i < data.length; i++) {
        r = data[i];
-       var row = $('<tr data-toggle="modal" data-target="#myModal"><td><img src="'+r[0]+'" /></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>');
+       var row = $('<tr class="clickRow" id="row' + i + '"><td><img src="http://www.jjc.edu/admissions/PublishingImages/radiology.jpg" /></td><td>'+r[11].substr(0,500)+'...</td><td>'+r[12].substr(0,500)+'...</td></tr>');
        $("#results").append(row);
-       $("#modalDoctor").html('doc')
-       $("#modalDate").html('doc')
-       $("#modalResult").html('doc')
-       $("#modalImpression").html('doc')
     }
-  });
+
+$( ".clickRow" ).click(function( ) {
+		    //  data-toggle="modal" data-target="#myModal"
+var ii = $(this).attr('id').substr(3,1);
+var r = rows[ii];
+
+       $("#modalDepartment").html(r[0]);
+       $("#modalClass").html(r[1]);
+       $("#modalCode").html(r[2]);
+       $("#modalProcedure").html(r[3]);
+       $("#modalPriority").html(r[4]);
+       $("#modalReadBy").html(r[5]);
+       $("#modalDoctor").html(r[6]);
+       $("#modalDate").html(r[9]);
+       $("#modalResult").html(r[11]);
+       $("#modalImpression").html(r[12]);
+
+		    $('#myModal').modal('show');
+		    
+		    });
+});
+
+
 });
 </script>
 </body>
